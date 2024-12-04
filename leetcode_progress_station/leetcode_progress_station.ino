@@ -2,29 +2,44 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <Arduino_JSON.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SH110X.h>
 
 // WiFi credentials
-// const char* ssid = "TP-Link2023"; // WiFi Name
-// const char* password = "TPLink@2023"; // WiFi Password
-const char* ssid = "Barnard Guest";
-const char* password = "";
+const char* ssid = "TP-Link2023"; // WiFi Name
+const char* password = "TPLink@2023"; // WiFi Password
+// const char* ssid = "Barnard Guest";
+// const char* password = "";
 
 // API URL
-const String apiUrl = "https://leetcode-api-faisalshohag.vercel.app/PowerYang";
+const String baseUrl = "https://leetcode-api-faisalshohag.vercel.app/";
+String leetcodeUsername = "PowerYang";
+String apiUrl = baseUrl + leetcodeUsername;
 
 // Buttons
 #define BUTTON_LEFT 0
 #define BUTTON_RIGHT 35
 
+// Define OLED display
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+// Create the OLED object
+Adafruit_SH1106G display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire);
+
 // Globals
-int currentScreen = 1; // Start on page 1
+int currentScreen = 1; 
 JSONVar apiResponse;
+
 // Time zone (0 for GMT)
 const long gmtOffset_sec = 0;
 const int daylightOffset_sec = 0;
 
 // Display setup
 TFT_eSPI tft = TFT_eSPI();
+
+// Color Palette
 uint16_t blueColor = tft.color565(0x2d, 0x8e, 0xff);
 uint16_t greenColor = tft.color565(0x1c, 0xbb, 0xba); 
 uint16_t orangeColor = tft.color565(0xff, 0xb7, 0x03); 
@@ -149,6 +164,14 @@ void setup() {
   Serial.begin(115200);
   tft.init();
   tft.setRotation(1);
+  // Start I2C communication for OLED
+  Wire.begin(21, 22); // SDA = 21, SCL = 22
+  
+  // Initialize the OLED display
+  if (!display.begin(0x3C)) { // 0x3C is the default I2C address for SH110X
+    Serial.println(F("SH110X allocation failed"));
+    for (;;);
+  }
 
   // Connect to Wi-Fi
   WiFi.begin(ssid, password);
@@ -171,6 +194,9 @@ void setup() {
   // Display first screen
   drawScreen(currentScreen);
 
+  // Display OLED screen
+  drawOLEDScreen();
+
   // Button interrupts
   pinMode(BUTTON_LEFT, INPUT_PULLUP);
   pinMode(BUTTON_RIGHT, INPUT_PULLUP);
@@ -187,24 +213,50 @@ void drawScreen(int screenNumber) {
   }
 }
 
+// OLED screen to display a random problem
+void drawOLEDScreen() {
+  if (JSON.typeof(apiResponse["recentSubmissions"]) == "undefined" || apiResponse["recentSubmissions"].length() == 0) {
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setCursor(0, 0);
+    display.print("No recent submissions.");
+    display.display();
+    return;
+  }
+
+  // Pick a random problem from recentSubmissions
+  int submissionCount = apiResponse["recentSubmissions"].length();
+  int randomIndex = random(0, submissionCount);
+  String problemTitle = (const char*)apiResponse["recentSubmissions"][randomIndex]["title"];
+
+  // Clear OLED and display the question
+  display.clearDisplay();
+  display.setTextSize(1);            
+  display.setTextColor(SH110X_WHITE);
+
+  display.setCursor(0, 0);
+  display.print("void recallRecent() {");
+
+  display.setCursor(0, 20);
+  display.print("problem = \"" + problemTitle + "\";");
+
+  display.setCursor(0, 55);
+  display.print("}");
+
+  display.display();
+}
+
 void loop() {
   if (digitalRead(BUTTON_LEFT) == LOW) {
     // Wait for button debounce
     delay(200);
-    // Navigate to the left screen
-    if (currentScreen > 1) {
-      currentScreen--;
-      drawScreen(currentScreen);
-    }
+    drawOLEDScreen(); // Redraw OLED with a new random problem
   }
 
   if (digitalRead(BUTTON_RIGHT) == LOW) {
     // Wait for button debounce
     delay(200);
-    // Navigate to the right screen
-    if (currentScreen < 3) {
-      currentScreen++;
-      drawScreen(currentScreen);
-    }
+    currentScreen = (currentScreen % 3) + 1; // Cycles through 1, 2, 3, 1...
+    drawScreen(currentScreen);
   }
 }
