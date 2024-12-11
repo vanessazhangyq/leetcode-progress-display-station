@@ -7,10 +7,8 @@
 #include <Adafruit_SH110X.h>
 
 // WiFi credentials
-const char* ssid = "TP-Link2023"; // WiFi Name
-const char* password = "TPLink@2023"; // WiFi Password
-// const char* ssid = "Barnard Guest";
-// const char* password = "";
+const char* ssid = "Barnard Guest"; // WiFi Name
+const char* password = ""; // WiFi Password
 
 // API URL
 const String baseUrl = "https://leetcode-api-faisalshohag.vercel.app/";
@@ -74,7 +72,7 @@ void displayTotalSolved() {
   tft.setCursor(50, 10);
   tft.print("Total Solved");
 
-  tft.setTextSize(4); // Bigger size
+  tft.setTextSize(4);
   tft.setTextFont(4); 
   tft.setTextColor(blueColor, TFT_BLACK);
   tft.setCursor(35, 35);
