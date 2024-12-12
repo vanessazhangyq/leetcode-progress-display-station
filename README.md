@@ -45,6 +45,8 @@ The API provides information such as:
 - Submission calendar
 
 ## 🔧 Setup Instructions
+0. **Setting up ESP32 TTGO T-display**
+    - If you are new to hardware or haven’t set up environment for ESP32, you may find this [Lab 1: TFT Display](https://www.notion.so/Lab-1-TFT-Display-a53b9c10137a4d95b22d301ec6009a94?pvs=21) helpful.
 
 1. **Wiring the OLED**:
     - SDA (OLED) to Pin 21 (ESP32)
@@ -82,7 +84,7 @@ Update the `leetcodeUsername` variable:
     
 6. **Enclosure**
     - The wire frame was inspired by [Mohit Bhoite’s OLED Terminal](https://www.bhoite.com/sculptures/oled-terminal/).
-    - See the [blog post](https://www.notion.so/vanessazhangyq/LeetCode-Progress-Display-Station-14ae96c0c3ee80ddbcdcfa32fcdfd578?pvs=4#159e96c0c3ee80b7bf82ca968ec81873) for detailed steps for creating the wire frame
+    - See the [blog post](https://www.notion.so/vanessazhangyq/LeetCode-Progress-Display-Station-14ae96c0c3ee80ddbcdcfa32fcdfd578?pvs=4#159e96c0c3ee80b7bf82ca968ec81873) for detailed steps to create the wire frame
   
 
 ## 🖥️ How It Works
@@ -100,6 +102,7 @@ Update the `leetcodeUsername` variable:
 
 - LeetCode API by [Faisal Shohag](https://github.com/faisalshohag)
 - Enclosure Design Inspiration by [Mohit Bhoite](https://www.bhoite.com/sculptures/oled-terminal/)
+- [COMS BC3930 Creative Embedded Systems Fall 2024](https://coms3930.notion.site/COMS-BC3930-Creative-Embedded-Systems-Fall-2024-b37acfcb34d04ea4a8ae539efad50187) by Tiffany Tseng (best course ever taken!)
 
 happy leetcoding :p
  
