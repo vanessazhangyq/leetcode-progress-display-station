@@ -96,6 +96,11 @@ Update the `leetcodeUsername` variable:
     - Shows a random prompt resembling a code snippet from your recent accepted submissions.
     - Use the **left button** to generate a new random prompt.
 
+## 🤝 Acknowledgments
+
+- LeetCode API by [Faisal Shohag](https://github.com/faisalshohag)
+- Enclosure Design Inspiration by [Mohit Bhoite](https://www.bhoite.com/sculptures/oled-terminal/)
+
 happy leetcoding :p
  
 
